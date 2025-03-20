@@ -36,4 +36,15 @@ public class TodoListController {
     public void updateList(@PathVariable("id") Integer id,@RequestParam String name, @RequestParam String todolist_type){
         todoListService.updateList(id,name,todolist_type);
     }
+
+    @GetMapping(path = "{id}")
+    public todoList getListById(@PathVariable("id") Integer id) {
+        return todoListService.getListById(id);
+    }
+
+    @PutMapping(path = "type/{id}")
+    public void updateListType(@PathVariable("id") Integer id, @RequestParam String todolist_type) {
+        todoListService.updateListType(id, todolist_type);
+        System.out.println("Type updated");
+    }
 }

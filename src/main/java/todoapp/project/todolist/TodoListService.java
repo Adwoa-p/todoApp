@@ -59,8 +59,22 @@ public class TodoListService {
         if (todolist_type!=null && todolist_type.length() > 0 && !Objects.equals(todoList.getTodolist_type(), todolist_type)){
             todoList.setTodolist_type(todolist_type);
         }
-
-
     }
 
+    public todoList getListById(Integer id) {
+        Optional<todoList> list = todoListRepository.findById(id);
+        if (list.isEmpty()) {
+            throw new IllegalStateException("No such list id " + id + " exists");
+        }
+        return list.get();
+    }
+
+
+        public void updateListType(Integer id, String todolist_type) {
+            todoList todoList = todoListRepository.findById(id).orElseThrow(() -> new IllegalStateException("No such id exists"));
+
+            if (todolist_type!=null && todolist_type.length() > 0 && !Objects.equals(todoList.getTodolist_type(), todolist_type)){
+                todoList.setTodolist_type(todolist_type);
+            }
+    }
 }
