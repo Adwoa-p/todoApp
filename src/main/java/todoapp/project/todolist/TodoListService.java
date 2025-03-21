@@ -54,6 +54,7 @@ public class TodoListService {
                 throw new IllegalStateException("Name already exists");
             }
             todoList.setName(name);
+            todoListRepository.save(todoList);
         }
 
         if (todolist_type!=null && todolist_type.length() > 0 && !Objects.equals(todoList.getTodolist_type(), todolist_type)){
@@ -75,6 +76,7 @@ public class TodoListService {
 
             if (todolist_type!=null && todolist_type.length() > 0 && !Objects.equals(todoList.getTodolist_type(), todolist_type)){
                 todoList.setTodolist_type(todolist_type);
+                todoListRepository.save(todoList);
             }
     }
 }

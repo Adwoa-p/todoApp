@@ -1,6 +1,10 @@
 package todoapp.project.todolist;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 
@@ -21,7 +25,12 @@ public class todoList {
     )
     private Integer todolist_id;
     private String name;
+
+    @CreationTimestamp
     private LocalDate created_at;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = true)
     private LocalDate updated_at;
     private int number_of_tasks;
     private int tasks_completed;
