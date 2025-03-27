@@ -32,10 +32,10 @@ public class TodoListService {
     }
 
     public void deleteList(Integer id){
-        boolean list = todoListRepository.existsById(id);
-        if (!list){
-            throw new IllegalStateException("No such id " + id + " exists");
-        }
+//        boolean list = todoListRepository.existsById(id);
+//        if (!list){
+//            throw new IllegalStateException("No such id " + id + " exists");
+//        }
 
         todoListRepository.deleteById(id);
         System.out.println("List successfully deleted");
