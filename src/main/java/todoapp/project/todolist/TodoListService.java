@@ -2,12 +2,8 @@ package todoapp.project.todolist;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -25,13 +21,14 @@ public class TodoListService {
         return todoListRepository.findAll();
     }
 
-    public void addList(todoList todoList){
+    public todoList addList(todoList todoList){
         Optional<todoList> toDoOptional = todoListRepository.findByName(todoList.getName());
         if (toDoOptional.isPresent()){
             throw new IllegalStateException("Name already exists");
         }
         todoListRepository.save(todoList);
 //        System.out.println(todoList);
+        return todoList;
     }
 
     public void deleteList(Integer id){
