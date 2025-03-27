@@ -16,7 +16,7 @@ import java.util.Optional;
 public class TodoListService {
     private final TodoListRepository todoListRepository;
 
-;    @Autowired
+    @Autowired
     public TodoListService(TodoListRepository todoListRepository) {
         this.todoListRepository = todoListRepository;
     }
