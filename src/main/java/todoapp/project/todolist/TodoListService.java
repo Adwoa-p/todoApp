@@ -3,6 +3,7 @@ package todoapp.project.todolist;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import todoapp.project.tasks.Task;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,14 +32,15 @@ public class TodoListService {
         return todoList;
     }
 
-    public void deleteList(Integer id){
-        boolean list = todoListRepository.existsById(id);
-        if (!list){
-            throw new IllegalStateException("No such id " + id + " exists");
+    public void deleteList(Integer id) {
+        Optional<todoList> listOptional = todoListRepository.findById(id);
+        if (listOptional.isEmpty()) {
+            throw new IllegalStateException("Task not found");
         }
-
-        todoListRepository.deleteById(id);
-        System.out.println("List successfully deleted");
+        todoList list = listOptional.get();
+        list.setDeleted(true);
+        todoListRepository.save(list);
+        System.out.println("Deleted task: " + list.getName());
     }
 
     @Transactional
