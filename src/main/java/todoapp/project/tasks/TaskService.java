@@ -3,6 +3,8 @@ package todoapp.project.tasks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import todoapp.project.tasks.enums.Priority;
+import todoapp.project.tasks.enums.Status;
 import todoapp.project.todolist.todoList;
 
 import java.util.List;
@@ -26,6 +28,11 @@ public class TaskService {
                .orElseThrow(() -> new RuntimeException("Task not found"));
        return retrievedTask;
     }
+
+//    public List<Task> getAllTasksInList(Integer listId) {
+//        List<Task> retrievedTasks = taskRepository.findByTodoListId(listId);
+//        return retrievedTasks;
+//    }
 
     public void addTasks(Task task) {
         Optional<Task> taskOptional = taskRepository.findByTitle(task.getTitle());

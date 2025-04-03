@@ -2,6 +2,7 @@ package todoapp.project.tasks;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import todoapp.project.tasks.enums.Priority;
 import todoapp.project.tasks.enums.Status;
 
 import java.util.List;
@@ -27,6 +28,11 @@ public class TaskController {
     public Task getTask(@PathVariable Integer id) {
         return taskService.getTask(id);
     }
+
+//    @GetMapping("/{listId}")
+//    public List<Task> getTasksByListId(@PathVariable Integer listId) {
+//        return taskService.getAllTasksInList(listId);
+//    }
 
     @PostMapping
     public void addTask(@RequestBody Task task) {
