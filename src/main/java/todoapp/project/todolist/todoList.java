@@ -1,5 +1,6 @@
 package todoapp.project.todolist;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import todoapp.project.tasks.Task;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 //@Entity
@@ -173,7 +175,6 @@ public class todoList {
     @CreationTimestamp
     private LocalDate created_at;
 
-    @UpdateTimestamp
     @Column(name = "updated_at", nullable = true)
     private LocalDate updated_at;
 
@@ -184,7 +185,13 @@ public class todoList {
     private int tasks_completed;
     private String todolist_type;
 
+    @JsonIgnore
     private boolean isDeleted;
+
+    @PrePersist
+    protected void onUpdate() {
+        this.updated_at = LocalDate.now();
+    }
 
     public todoList() {
     }
@@ -192,7 +199,7 @@ public class todoList {
     public todoList(String name, LocalDate created_at, LocalDate updated_at, List<Task> tasks, int tasks_completed, String todolist_type) {
         this.name = name;
         this.created_at = created_at;
-        this.updated_at = updated_at;
+        this.updated_at = null;
         this.tasks = tasks;
         this.tasks_completed = tasks_completed;
         this.todolist_type = todolist_type;
