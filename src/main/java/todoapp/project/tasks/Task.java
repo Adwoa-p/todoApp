@@ -2,6 +2,8 @@ package todoapp.project.tasks;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import todoapp.project.todolist.todoList;
@@ -11,6 +13,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table
+@Getter
+@Setter
 public class Task {
 
     @Id
@@ -33,7 +37,7 @@ public class Task {
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updatedAt", nullable = true) // trying prepersist on update and set to localdatetime.now() and see if it works
+    @Column(name = "updatedAt", nullable = true)
     private LocalDateTime updatedAt;
 
     @Column(name = "deadline", nullable = true)
@@ -82,86 +86,6 @@ public class Task {
         this.isDeleted = false;
     }
 
-    public Integer getTaskId() {
-        return taskId;
-    }
-
-    public void setTaskId(Integer taskId) {
-        this.taskId = taskId;
-    }
-
-    public String getTitle() {
-        return this.title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public LocalDateTime getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(LocalDateTime deadline) {
-        this.deadline = deadline;
-    }
-
-    public LocalDateTime getCompletedDate() {
-        return completedDate;
-    }
-
-    public void setCompletedDate(LocalDateTime completedDate) {
-        this.completedDate = completedDate;
-    }
-
-    public Priority getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Priority priority) {
-        this.priority = priority;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public Integer getTodoListId() {
-        return this.todoList != null ? this.todoList.getTodolist_id() : null;
-    }
-
-    public void setIsDeleted(boolean isDeleted) {
-        this.isDeleted = isDeleted;
-    }
-
     @Override
     public String toString() {
         return "Task{" +
@@ -169,4 +93,5 @@ public class Task {
                 ", status=" + status +
                 '}';
     }
+
 }

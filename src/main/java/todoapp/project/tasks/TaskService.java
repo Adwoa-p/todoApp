@@ -3,6 +3,8 @@ package todoapp.project.tasks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import todoapp.project.tasks.enums.Priority;
+import todoapp.project.tasks.enums.Status;
 import todoapp.project.todolist.todoList;
 
 import java.util.List;
@@ -79,7 +81,7 @@ public class TaskService {
             throw new IllegalStateException("Task not found");
         }
         Task task = taskOptional.get();
-        task.setIsDeleted(delete);
+        task.setDeleted(delete);
         taskRepository.save(task);
         System.out.println("Deleted task: " + task.getTitle());
     }

@@ -2,6 +2,7 @@ package todoapp.project.tasks;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import todoapp.project.tasks.enums.Priority;
 import todoapp.project.tasks.enums.Status;
 
 import java.util.List;

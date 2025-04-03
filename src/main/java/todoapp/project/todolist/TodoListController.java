@@ -1,8 +1,11 @@
 package todoapp.project.todolist;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import todoapp.project.dtos.TodoListDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,8 +22,9 @@ public class TodoListController {
     }
 
     @GetMapping
-    public List<todoList> getList(){
-        return todoListService.todoLists();
+    public Page<todoList> getList(@RequestParam (value = "pageNo", defaultValue = "0", required = false) int pageNo,
+                                  @RequestParam (value="pageSize", defaultValue = "10", required = false) int pageSize){
+        return todoListService.todoLists(pageNo, pageSize);
     }
 
     @PostMapping
