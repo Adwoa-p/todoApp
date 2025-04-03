@@ -2,7 +2,14 @@ package todoapp.project.todolist;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import todoapp.project.dtos.ResponseDto;
+import todoapp.project.dtos.TodoListDto;
 import todoapp.project.tasks.Task;
 
 import java.util.List;
@@ -18,8 +25,9 @@ public class TodoListService {
         this.todoListRepository = todoListRepository;
     }
 
-    public List<todoList> todoLists() {
-        return todoListRepository.findAll();
+    public Page<todoList> todoLists(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        return todoListRepository.findAll(pageable);
     }
 
     public todoList addList(todoList todoList){
@@ -73,7 +81,7 @@ public class TodoListService {
         public void updateListType(Integer id, String todolist_type) {
             todoList todoList = todoListRepository.findById(id).orElseThrow(() -> new IllegalStateException("No such id exists"));
 
-            if (todolist_type!=null && todolist_type.length() > 0 && !Objects.equals(todoList.getTodolist_type(), todolist_type)){
+            if (todolist_type!=null && !todolist_type.isEmpty() && !Objects.equals(todoList.getTodolist_type(), todolist_type)){
                 todoList.setTodolist_type(todolist_type);
                 todoListRepository.save(todoList);
             }

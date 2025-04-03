@@ -86,7 +86,7 @@ public class TaskService {
             throw new IllegalStateException("Task not found");
         }
         Task task = taskOptional.get();
-        task.setIsDeleted(delete);
+        task.setDeleted(delete);
         taskRepository.save(task);
         System.out.println("Deleted task: " + task.getTitle());
     }

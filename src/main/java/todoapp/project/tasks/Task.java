@@ -1,7 +1,6 @@
 package todoapp.project.tasks;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -33,7 +32,8 @@ public class Task {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @Column(name = "updatedAt", nullable = true)
+    @UpdateTimestamp
+    @Column(name = "updatedAt", nullable = true) // trying prepersist on update and set to localdatetime.now() and see if it works
     private LocalDateTime updatedAt;
 
     @Column(name = "deadline", nullable = true)
@@ -48,17 +48,11 @@ public class Task {
     private Status status;
 
     @ManyToOne
-    @JoinColumn(nullable = true, name = "todoListId")
+    @JoinColumn(nullable = true)
     @JsonBackReference
     private todoList todoList;
 
-    @JsonIgnore
     private boolean isDeleted;
-
-    @PrePersist
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 
     public Task() {
     }
@@ -68,7 +62,7 @@ public class Task {
         this.title = title;
         this.description = description;
         this.createdAt = createdAt;
-        this.updatedAt = null;
+        this.updatedAt = updatedAt;
         this.deadline = deadline;
         this.completedDate = completedDate;
         this.priority = priority;
@@ -80,7 +74,7 @@ public class Task {
         this.title = title;
         this.description = description;
         this.createdAt = createdAt;
-        this.updatedAt = null;
+        this.updatedAt = updatedAt;
         this.deadline = deadline;
         this.completedDate = completedDate;
         this.priority = priority;
