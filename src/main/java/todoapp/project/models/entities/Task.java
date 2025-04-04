@@ -1,17 +1,25 @@
 package todoapp.project.tasks;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import todoapp.project.todolist.todoList;
 import todoapp.project.tasks.enums.Priority;
 import todoapp.project.tasks.enums.Status;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table
+@Getter
+@Setter
 public class Task {
+
 
     @Id
     @SequenceGenerator(
@@ -33,12 +41,12 @@ public class Task {
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updatedAt", nullable = true) // trying prepersist on update and set to localdatetime.now() and see if it works
+    @Column(name = "updated_at", nullable = true)
     private LocalDateTime updatedAt;
 
     @Column(name = "deadline", nullable = true)
     private LocalDateTime deadline;
-    @Column(name = "dateCompleted", nullable = true)
+    @Column(name = "date_completed", nullable = true)
     private LocalDateTime completedDate;
 
     @Enumerated(EnumType.STRING)
@@ -52,7 +60,12 @@ public class Task {
     @JsonBackReference
     private todoList todoList;
 
+    @JsonIgnore
     private boolean isDeleted;
+
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
     public Task() {
     }
@@ -82,83 +95,11 @@ public class Task {
         this.isDeleted = false;
     }
 
-    public Integer getTaskId() {
-        return taskId;
-    }
-
-    public void setTaskId(Integer taskId) {
-        this.taskId = taskId;
-    }
-
-    public String getTitle() {
-        return this.title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public LocalDateTime getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(LocalDateTime deadline) {
-        this.deadline = deadline;
-    }
-
-    public LocalDateTime getCompletedDate() {
-        return completedDate;
-    }
-
-    public void setCompletedDate(LocalDateTime completedDate) {
-        this.completedDate = completedDate;
-    }
-
-    public Priority getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Priority priority) {
-        this.priority = priority;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
     public Integer getTodoListId() {
         return this.todoList != null ? this.todoList.getTodolist_id() : null;
     }
 
-    public void setIsDeleted(boolean isDeleted) {
+    public void setDeleted(boolean isDeleted) {
         this.isDeleted = isDeleted;
     }
 
