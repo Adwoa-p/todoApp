@@ -1,4 +1,4 @@
-package todoapp.project.tasks;
+package todoapp.project.config;
 
 import org.springframework.context.annotation.Configuration;
 

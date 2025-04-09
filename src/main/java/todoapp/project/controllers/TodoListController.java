@@ -1,14 +1,11 @@
-package todoapp.project.todolist;
+package todoapp.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import todoapp.project.dtos.TodoListDto;
-
-import java.time.LocalDate;
-import java.util.List;
+import todoapp.project.enums.TodoListType;
+import todoapp.project.models.entities.TodoList;
+import todoapp.project.services.TodoListService;
 
 @RestController
 @RequestMapping(path="api/todolist")
@@ -22,13 +19,13 @@ public class TodoListController {
     }
 
     @GetMapping
-    public Page<todoList> getList(@RequestParam (value = "pageNo", defaultValue = "0", required = false) int pageNo,
+    public Page<TodoList> getList(@RequestParam (value = "pageNo", defaultValue = "0", required = false) int pageNo,
                                   @RequestParam (value="pageSize", defaultValue = "10", required = false) int pageSize){
         return todoListService.todoLists(pageNo, pageSize);
     }
 
     @PostMapping
-    public void addNewList(@RequestBody todoList todoList){
+    public void addNewList(@RequestBody TodoList todoList){
         todoListService.addList(todoList);
     }
 
@@ -38,17 +35,17 @@ public class TodoListController {
     }
 
     @PutMapping(path = "{id}")
-    public void updateList(@PathVariable("id") Integer id,@RequestParam String name, @RequestParam String todolist_type){
-        todoListService.updateList(id,name,todolist_type);
+    public void updateList(@PathVariable("id") Integer id,@RequestParam String name){
+        todoListService.updateList(id,name);
     }
 
     @GetMapping(path = "{id}")
-    public todoList getListById(@PathVariable("id") Integer id) {
+    public TodoList getListById(@PathVariable("id") Integer id) {
         return todoListService.getListById(id);
     }
 
     @PutMapping(path = "type/{id}")
-    public void updateListType(@PathVariable("id") Integer id, @RequestParam String todolist_type) {
+    public void updateListType(@PathVariable("id") Integer id, @RequestParam TodoListType todolist_type) {
         todoListService.updateListType(id, todolist_type);
         System.out.println("Type updated");
     }

@@ -7,6 +7,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import todoapp.project.models.entities.TodoList;
+import todoapp.project.repositories.TodoListRepository;
+import todoapp.project.services.TodoListService;
 
 @ExtendWith(MockitoExtension.class)
 class  TodoListServiceTest {
@@ -25,16 +28,16 @@ class  TodoListServiceTest {
     @Test
     void addListSuccessfully() {
 
-        todoList list = new todoList();
+        TodoList list = new TodoList();
         list.setTodolist_id(3);
         list.setName("Works");
-        list.setTodolist_type("Work");
+//        list.setTodolist_type("Work");
         list.setTasks_completed(3);
 //        list.setNumber_of_tasks(4);
 
         Mockito.when(todoListRepository.save(list)).thenReturn(list);
 
-        todoList todolist = todoListService.addList(list);
+        TodoList todolist = todoListService.addList(list);
 
 //       makes sure that testProduct == matchProduct
         Assertions.assertNotNull(todolist);

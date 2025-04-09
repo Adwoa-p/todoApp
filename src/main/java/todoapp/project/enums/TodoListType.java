@@ -1,4 +1,4 @@
-package todoapp.project.todolist;
+package todoapp.project.enums;
 
 public enum TodoListType {
     HOME,

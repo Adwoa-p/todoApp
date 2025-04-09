@@ -1,23 +1,26 @@
-package todoapp.project.todolist;
+package todoapp.project.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import todoapp.project.tasks.Task;
-
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import todoapp.project.enums.TodoListType;
 
 
 @Entity
 @Table
 @Getter
 @Setter
-public class todoList {
+@AllArgsConstructor
+@NoArgsConstructor
+public class TodoList {
 
     @Id
     @SequenceGenerator(
@@ -29,42 +32,38 @@ public class todoList {
             strategy = GenerationType.SEQUENCE,
             generator = "todo_sequence"
     )
-    private Integer todolist_id;
+    private Integer todoListId;
 
     private String name;
 
     @CreationTimestamp
-    private LocalDate created_at;
+    private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = true)
-    private LocalDate updated_at;
+    @Column(name = "updatedAt", nullable = true)
+    private LocalDateTime updatedAt;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Task> tasks;
 
     private int tasks_completed;
-    private String todolist_type;
+
+    @Enumerated(EnumType.STRING)
+    private TodoListType todolist_type;
 
     @JsonIgnore
     private boolean isDeleted;
 
     @PrePersist
-    protected void onUpdate() {
-        this.updated_at = LocalDate.now();
+    protected void onCreate(){
+        System.out.println("onCreate triggered");
+        this.setUpdatedAt(null);
     }
 
-    public todoList() {
-    }
-
-    public todoList(String name, LocalDate created_at, LocalDate updated_at, List<Task> tasks, int tasks_completed, String todolist_type) {
-        this.name = name;
-        this.created_at = created_at;
-        this.updated_at = null;
-        this.tasks = tasks;
-        this.tasks_completed = tasks_completed;
-        this.todolist_type = todolist_type;
-        this.isDeleted = false;
+    @PreUpdate
+    protected void onUpdate(){
+        System.out.println("onUpdate triggered");
+        this.setUpdatedAt(LocalDateTime.now());
     }
 
     public boolean isDeleted() {
@@ -83,7 +82,7 @@ public class todoList {
     @Override
     public String toString() {
         return "todoList{" +
-                "todolist_id=" + todolist_id +
+                "todolist_id=" + todoListId +
                 ", name='" + name + '\'' +
                 ", todolist_type='" + todolist_type + '\'' +
                 ", number_of_tasks=" + getNumber_of_tasks() +

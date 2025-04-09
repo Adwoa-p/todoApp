@@ -1,23 +1,22 @@
-package todoapp.project.tasks;
+package todoapp.project.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import todoapp.project.todolist.todoList;
-import todoapp.project.tasks.enums.Priority;
-import todoapp.project.tasks.enums.Status;
+import todoapp.project.enums.Priority;
+import todoapp.project.enums.Status;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 public class Task {
 
 
@@ -40,7 +39,6 @@ public class Task {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
     @Column(name = "updated_at", nullable = true)
     private LocalDateTime updatedAt;
 
@@ -58,45 +56,29 @@ public class Task {
     @ManyToOne
     @JoinColumn(nullable = true)
     @JsonBackReference
-    private todoList todoList;
+    private TodoList todoList;
 
     @JsonIgnore
     private boolean isDeleted;
 
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
-
     public Task() {
     }
 
-    public Task(Integer taskId,String title, String description, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deadline, LocalDateTime completedDate, Priority priority, Status status) {
-        this.taskId = taskId;
-        this.title = title;
-        this.description = description;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deadline = deadline;
-        this.completedDate = completedDate;
-        this.priority = priority;
-        this.status = status;
-        this.isDeleted = false;
+    @PrePersist
+    protected void onCreate(){
+        System.out.println("onCreate triggered");
+        this.setStatus(Status.PENDING);
+        this.setUpdatedAt(null);
     }
 
-    public Task(String title, String description, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deadline, LocalDateTime completedDate, Priority priority, Status status) {
-        this.title = title;
-        this.description = description;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deadline = deadline;
-        this.completedDate = completedDate;
-        this.priority = priority;
-        this.status = status;
-        this.isDeleted = false;
+    @PreUpdate
+    protected void onUpdate(){
+        System.out.println("onUpdate triggered");
+        this.setUpdatedAt(LocalDateTime.now());
     }
 
     public Integer getTodoListId() {
-        return this.todoList != null ? this.todoList.getTodolist_id() : null;
+        return this.todoList != null ? this.todoList.getTodoListId() : null;
     }
 
     public void setDeleted(boolean isDeleted) {

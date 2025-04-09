@@ -1,10 +1,10 @@
-package todoapp.project.dtos;
+package todoapp.project.models.dtos;
 
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import todoapp.project.tasks.Task;
+import todoapp.project.models.entities.Task;
 
 import java.time.LocalDate;
 import java.util.List;

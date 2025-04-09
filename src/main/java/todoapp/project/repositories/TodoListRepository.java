@@ -1,15 +1,22 @@
-package todoapp.project.todolist;
+package todoapp.project.repositories;
 
 import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import todoapp.project.models.entities.TodoList;
 
 //This repo is responsible for data access
 @Repository
-public interface TodoListRepository extends JpaRepository<todoList, Integer> {
+public interface TodoListRepository extends JpaRepository<TodoList, Integer> {
 
 //    This will transform to a sql such as select * from todoList where email = ...
 //    @Query
-    Optional<todoList> findByName(String name);
+    Optional<TodoList> findByName(String name);
+
+    Page<TodoList> findByIsDeletedFalse(Pageable pageable);
+
+    TodoList findByTodoListIdAndIsDeletedFalse(Integer id);
 }

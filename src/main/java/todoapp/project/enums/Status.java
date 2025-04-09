@@ -1,8 +1,8 @@
-package todoapp.project.tasks.enums;
+package todoapp.project.enums;
 
 public enum Status {
     COMPLETED,
-    PENDING,
-    IN_PROGRESS,
+    PENDING, // meaning you haven't started
+    IN_PROGRESS, // started but still on it
     OVERDUE;
 }

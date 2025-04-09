@@ -1,11 +1,14 @@
-package todoapp.project.todolist;
+package todoapp.project.config;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import todoapp.project.tasks.Task;
-import todoapp.project.tasks.enums.Status;
-import todoapp.project.tasks.enums.Priority;
+import todoapp.project.enums.TodoListType;
+import todoapp.project.models.entities.Task;
+import todoapp.project.enums.Status;
+import todoapp.project.enums.Priority;
+import todoapp.project.repositories.TodoListRepository;
+import todoapp.project.models.entities.TodoList;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,7 +20,7 @@ public class TodoListConfig {
     @Bean
     CommandLineRunner runner(TodoListRepository repository){
         return args -> {
-            todoList list1 =  new todoList(
+            TodoList list1 =  new TodoList(
                     "Work Tasks",
                     LocalDate.of(2025,3,24),
                     LocalDate.of(2025,3,25),
@@ -26,10 +29,10 @@ public class TodoListConfig {
                             new Task("Task 2", "Description 2", LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now().plusDays(2), null, Priority.Medium, Status.PENDING)
                     ),
                     2,
-                    "Work"
+                    TodoListType.WORK
             );
 
-            todoList list2 =  new todoList(
+            TodoList list2 =  new TodoList(
                     "Basic Tasks",
                     LocalDate.of(2025,3,19),
                     LocalDate.of(2025,3,19),
@@ -37,7 +40,7 @@ public class TodoListConfig {
                             new Task("Task 2", "Description 2", LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now().plusDays(2), null, Priority.Medium, Status.PENDING)
                     ),
                     5,
-                    "Home"
+                    TodoListType.WORK
             );
 
             repository.saveAll(List.of(list1,list2));

@@ -1,49 +1,77 @@
-package todoapp.project.tasks;
+package todoapp.project.services;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import todoapp.project.tasks.enums.Priority;
-import todoapp.project.tasks.enums.Status;
-import todoapp.project.todolist.todoList;
+import todoapp.project.enums.Priority;
+import todoapp.project.enums.Status;
+import todoapp.project.models.dtos.TaskDto;
+import todoapp.project.models.entities.Task;
+import todoapp.project.models.entities.TodoList;
+import todoapp.project.repositories.TaskRepository;
+import todoapp.project.repositories.TodoListRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final TodoListRepository todoListRepository;
 
-    @Autowired
-    public TaskService(TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
+    public List<Task> getAllTasks() {
+        List<Task> tasks = taskRepository.findByIsDeletedFalse();
+        for (Task task : tasks) {
+            if (task.getStatus() != Status.COMPLETED && task.getDeadline().isBefore(LocalDateTime.now())) {
+                task.setStatus(Status.OVERDUE);
+                taskRepository.save(task);
+            }
+        }
+        return tasks;
     }
-
-    public List<Task> getAllTasks() { return taskRepository.findAll();}
 
     public Task getTask(Integer id) {
-       Task retrievedTask = taskRepository.findById(id)
-               .orElseThrow(() -> new RuntimeException("Task not found"));
-       return retrievedTask;
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+        if (task.getStatus() != Status.COMPLETED && task.getDeadline().isBefore(LocalDateTime.now())) {
+            task.setStatus(Status.OVERDUE);
+            taskRepository.save(task);
+        }
+        return task;
     }
+
 
 //    public List<Task> getAllTasksInList(Integer listId) {
 //        List<Task> retrievedTasks = taskRepository.findByTodoListId(listId);
 //        return retrievedTasks;
 //    }
 
-    public void addTasks(Task task) {
-        Optional<Task> taskOptional = taskRepository.findByTitle(task.getTitle());
+    public void addTasks(TaskDto taskDto) {
+        Optional<Task> taskOptional = taskRepository.findByTitle(taskDto.getTitle());
         if (taskOptional.isPresent()){
             throw new IllegalStateException("Task already exists");
         }
-        taskRepository.save(task);
+        Optional<TodoList> todoList = todoListRepository.findById(taskDto.getTodoListId());
+
+        Task task = Task.builder()
+                .deadline(taskDto.getDeadline())
+                .priority(taskDto.getPriority())
+                .description(taskDto.getDescription())
+                .title(taskDto.getTitle())
+                .todoList(todoList.get())
+                .build();
+        todoList.get().getTasks().add(task);
+        Task savedTask = taskRepository.save(task);
+        System.out.println(savedTask);
     }
 
     @Transactional
-    public void updateTask(Integer id, String title, String description) {
+    public void updateTask(Integer id, String title) {
         Task task = taskRepository.findById(id).orElseThrow(() -> new IllegalStateException("No such task exists"));
 
         if (title!= null && !title.isEmpty() && !Objects.equals(task.getTitle(), title)){
@@ -52,15 +80,6 @@ public class TaskService {
                 throw new IllegalStateException("Task already exists");
             }
             task.setTitle(title);
-            taskRepository.save(task);
-        }
-
-        if (title!= null && !title.isEmpty() && !Objects.equals(task.getDescription(), description)){
-            Optional<Task> taskOptional = taskRepository.findByDescription(description);
-            if (taskOptional.isPresent()){
-                throw new IllegalStateException("Task Description already exists");
-            }
-            task.setDescription(description);
             taskRepository.save(task);
         }
     }

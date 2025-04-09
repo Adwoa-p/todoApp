@@ -1,4 +1,4 @@
-package todoapp.project.tasks.enums;
+package todoapp.project.enums;
 
 public enum Priority {
     High,

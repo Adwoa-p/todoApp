@@ -1,9 +1,12 @@
-package todoapp.project.tasks;
+package todoapp.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import todoapp.project.tasks.enums.Priority;
-import todoapp.project.tasks.enums.Status;
+import todoapp.project.enums.Priority;
+import todoapp.project.enums.Status;
+import todoapp.project.models.entities.Task;
+import todoapp.project.services.TaskService;
+import todoapp.project.models.dtos.TaskDto;
 
 import java.util.List;
 
@@ -35,22 +38,22 @@ public class TaskController {
 //    }
 
     @PostMapping
-    public void addTask(@RequestBody Task task) {
-        taskService.addTasks(task);
+    public void addTask(@RequestBody TaskDto taskDto) {
+        taskService.addTasks(taskDto);
     }
 
     @PutMapping(path = "{id}")
-    public void updateTask(@PathVariable Integer id,@RequestBody String title, @RequestBody String description) {
-        taskService.updateTask(id, title, description);
+    public void updateTask(@PathVariable Integer id,@RequestBody String title) {
+        taskService.updateTask(id, title);
     }
 
     @PutMapping("{id}/status")
-    public void setStatus(@RequestBody Status status, @PathVariable Integer id) {
+    public void setStatus(@RequestParam Status status, @PathVariable Integer id) {
         taskService.setStatus(status, id);
     }
 
     @PutMapping("{id}/priority")
-    public void setPriority(@RequestBody Priority priority, @PathVariable Integer id) {
+    public void setPriority(@RequestParam Priority priority, @PathVariable Integer id) {
         taskService.setPriority(priority, id);
     }
 
