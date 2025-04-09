@@ -11,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import todoapp.project.enums.Status;
 import todoapp.project.enums.TodoListType;
 
 
@@ -46,8 +47,6 @@ public class TodoList {
     @JsonManagedReference
     private List<Task> tasks;
 
-    private int tasks_completed;
-
     @Enumerated(EnumType.STRING)
     private TodoListType todolist_type;
 
@@ -66,17 +65,15 @@ public class TodoList {
         this.setUpdatedAt(LocalDateTime.now());
     }
 
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
-    }
-
     @JsonProperty("number_of_tasks")
     public int getNumber_of_tasks() {
         return tasks != null ? tasks.size() : 0;
+    }
+
+    @JsonProperty("NumberOfTasksCompleted")
+    public int getNumberOfTasksCompleted() {
+        if (tasks == null) return 0;
+        return (int) tasks.stream().filter(task -> task.getStatus() == Status.COMPLETED).count();
     }
 
     @Override
