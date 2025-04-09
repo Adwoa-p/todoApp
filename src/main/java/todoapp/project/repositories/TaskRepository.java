@@ -12,14 +12,9 @@ import java.util.Optional;
 public interface TaskRepository extends JpaRepository<Task, Integer> {
     Optional<Task> findByTitle(String title);
 
-//    Optional<Task> findByDescriptionA(String description);
-
-//    List<Task> findByTodoListId(Integer listId);
-
-//    Optional<TaskDto> findAllByTodoListId(Integer integer);
-
     Task findByTaskIdAndIsDeletedFalse(Integer id);
 
-
     List<Task> findByIsDeletedFalse();
+
+//    List<Task> findAllByTodoListId(Integer listId);
 }

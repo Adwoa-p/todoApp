@@ -44,6 +44,7 @@ public class Task {
 
     @Column(name = "deadline", nullable = true)
     private LocalDateTime deadline;
+    
     @Column(name = "date_completed", nullable = true)
     private LocalDateTime completedDate;
 

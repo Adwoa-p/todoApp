@@ -45,9 +45,8 @@ public class TaskService {
         return task;
     }
 
-
 //    public List<Task> getAllTasksInList(Integer listId) {
-//        List<Task> retrievedTasks = taskRepository.findByTodoListId(listId);
+//        List<Task> retrievedTasks = taskRepository.findAllByTodoListId(listId);
 //        return retrievedTasks;
 //    }
 
@@ -84,11 +83,13 @@ public class TaskService {
         }
     }
 
-
     public void setStatus(Status status, Integer id) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("No such task exists"));
         task.setStatus(status);
+        if (status == Status.COMPLETED) {
+            task.setCompletedDate(LocalDateTime.now());
+        }
         taskRepository.save(task);
     }
 
