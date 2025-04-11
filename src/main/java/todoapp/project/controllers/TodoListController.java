@@ -2,8 +2,11 @@ package todoapp.project.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import todoapp.project.enums.TodoListType;
+import todoapp.project.models.dtos.TodoListDto;
 import todoapp.project.models.entities.TodoList;
 import todoapp.project.services.TodoListService;
 
@@ -25,18 +28,18 @@ public class TodoListController {
     }
 
     @PostMapping
-    public void addNewList(@RequestBody TodoList todoList){
-        todoListService.addList(todoList);
+    public ResponseEntity<ResponseEntity<String>> addNewList(@RequestBody TodoList todoList){
+        return new ResponseEntity<>(todoListService.addList(todoList), HttpStatus.OK);
     }
 
     @DeleteMapping(path = "{id}")
-    public void deleteList(@PathVariable("id") Integer id){
-        todoListService.deleteList(id);
+    public ResponseEntity<ResponseEntity<String>> deleteList(@PathVariable("id") Integer id){
+        return new ResponseEntity<>(todoListService.deleteList(id), HttpStatus.OK);
     }
 
     @PutMapping(path = "{id}")
-    public void updateList(@PathVariable("id") Integer id,@RequestParam String name){
-        todoListService.updateList(id,name);
+    public ResponseEntity<ResponseEntity<String>> updateList(@PathVariable("id") Integer id, @RequestBody TodoListDto todoListDto){
+        return new ResponseEntity<>(todoListService.updateList(id,todoListDto), HttpStatus.OK);
     }
 
     @GetMapping(path = "{id}")
@@ -44,9 +47,8 @@ public class TodoListController {
         return todoListService.getListById(id);
     }
 
-    @PutMapping(path = "type/{id}")
-    public void updateListType(@PathVariable("id") Integer id, @RequestParam TodoListType todolist_type) {
-        todoListService.updateListType(id, todolist_type);
-        System.out.println("Type updated");
+    @PatchMapping(path = "type/{id}")
+    public ResponseEntity<ResponseEntity<String>> updateListType(@PathVariable("id") Integer id, @RequestParam TodoListType todolist_type) {
+        return new ResponseEntity<>(todoListService.updateListType(id, todolist_type), HttpStatus.OK);
     }
 }
