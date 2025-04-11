@@ -11,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.Where;
 import todoapp.project.enums.Status;
 import todoapp.project.enums.TodoListType;
 
@@ -43,7 +44,8 @@ public class TodoList {
     @Column(name = "updatedAt", nullable = true)
     private LocalDateTime updatedAt;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "todoList",cascade = CascadeType.ALL, orphanRemoval = true)
+    @Where(clause = "is_deleted = false")
     @JsonManagedReference
     private List<Task> tasks;
 
@@ -67,13 +69,19 @@ public class TodoList {
 
     @JsonProperty("number_of_tasks")
     public int getNumber_of_tasks() {
-        return tasks != null ? tasks.size() : 0;
+        return (int) tasks.stream().filter(task -> !task.isDeleted()).count();
     }
 
     @JsonProperty("NumberOfTasksCompleted")
     public int getNumberOfTasksCompleted() {
         if (tasks == null) return 0;
-        return (int) tasks.stream().filter(task -> task.getStatus() == Status.COMPLETED).count();
+        int count = 0;
+        for (Task task:tasks){
+            if (task.getStatus()== Status.COMPLETED && !task.isDeleted()){
+                count+=1;
+            }
+        }
+        return count;
     }
 
     @Override

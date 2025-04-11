@@ -44,7 +44,7 @@ public class Task {
 
     @Column(name = "deadline", nullable = true)
     private LocalDateTime deadline;
-    
+
     @Column(name = "date_completed", nullable = true)
     private LocalDateTime completedDate;
 
@@ -55,7 +55,7 @@ public class Task {
     private Status status;
 
     @ManyToOne
-    @JoinColumn(nullable = true)
+    @JoinColumn(nullable = true, name = "todoListId")
     @JsonBackReference
     private TodoList todoList;
 
@@ -80,10 +80,6 @@ public class Task {
 
     public Integer getTodoListId() {
         return this.todoList != null ? this.todoList.getTodoListId() : null;
-    }
-
-    public void setDeleted(boolean isDeleted) {
-        this.isDeleted = isDeleted;
     }
 
     @Override
