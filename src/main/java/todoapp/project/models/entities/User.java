@@ -1,4 +1,4 @@
-package todoapp.project.security;
+package todoapp.project.models.entities;
 
 import jakarta.persistence.*;
 import lombok.*;

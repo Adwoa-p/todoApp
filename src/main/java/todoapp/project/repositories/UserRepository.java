@@ -1,6 +1,7 @@
-package todoapp.project.security;
+package todoapp.project.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import todoapp.project.models.entities.User;
 
 import java.util.Optional;
 

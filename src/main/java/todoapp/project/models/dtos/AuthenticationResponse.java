@@ -1,4 +1,4 @@
-package todoapp.project.security;
+package todoapp.project.models.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class AuthenticationResponse {
 
     public String token;
+    public String message;
 }

@@ -5,11 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import todoapp.project.enums.TodoListType;
+import todoapp.project.models.dtos.ResponseDto;
 import todoapp.project.models.dtos.TodoListDto;
 import todoapp.project.models.entities.TodoList;
 import todoapp.project.repositories.TodoListRepository;
@@ -26,24 +28,29 @@ public class TodoListService {
         this.todoListRepository = todoListRepository;
     }
 
-    public Page<TodoList> todoLists(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+    public Page<TodoList> todoLists(int pageNo, int pageSize, String sortBy, boolean ascending, TodoListType todoListType) {
+        Sort sort = sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        if(Objects.nonNull(todoListType)) {
+            return todoListRepository.findByTodoListTypeIsDeletedFalse(todoListType, pageable);
+        }
         return todoListRepository.findByIsDeletedFalse(pageable);
     }
 
-    public ResponseEntity<String> addList(TodoList todoList){
+    public ResponseDto<TodoList> addList(TodoList todoList){
         Optional<TodoList> toDoOptional = todoListRepository.findByName(todoList.getName());
         if (toDoOptional.isPresent() && !toDoOptional.get().isDeleted()){
             throw new IllegalStateException("Name already exists");
         }
         todoListRepository.save(todoList);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body("Todolist with id " + todoList.getTodoListId() + " added successfully");
+        return ResponseDto.<TodoList>builder()
+                .message("Todolist with id " + todoList.getTodoListId() + " added successfully")
+                .response(todoList)
+                .build();
 
     }
 
-    public ResponseEntity<String>  deleteList(Integer id) {
+    public ResponseDto<String> deleteList(Integer id) {
         Optional<TodoList> listOptional = todoListRepository.findById(id);
         if (listOptional.isEmpty()) {
             throw new IllegalStateException("Task not found");
@@ -54,13 +61,14 @@ public class TodoListService {
         }
         list.setDeleted(true);
         todoListRepository.save(list);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body("Deleted list with " + list.getTodoListId() + "successfully");
+        return ResponseDto.<String>builder()
+                .message("TodoList deleted successfully")
+                .response(String.format("TodoList with id %d deleted successfully", id))
+                .build();
     }
 
     @Transactional
-    public ResponseEntity<String>  updateList(Integer id, TodoListDto todoListDto){
+    public ResponseDto<String>  updateList(Integer id, TodoListDto todoListDto){
         TodoList todoList = todoListRepository.findById(id).orElseThrow(() -> new IllegalStateException("No such id exists"));
 
         if (todoList.isDeleted()) {
@@ -75,9 +83,10 @@ public class TodoListService {
             todoList.setName(todoListDto.getName());
             todoListRepository.save(todoList);
         }
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body("Todolist with id " + todoList.getTodoListId() + " updated successfully");
+        return ResponseDto.<String>builder()
+                .message("TodoList update")
+                .response("Todolist with id " + todoList.getTodoListId() + " updated successfully")
+                .build();
     }
 
     public TodoList getListById(Integer id) {
@@ -94,7 +103,7 @@ public class TodoListService {
     }
 
 
-        public ResponseEntity<String>  updateListType(Integer id, TodoListType todolist_type) {
+        public ResponseDto<String>  updateListType(Integer id, TodoListType todolist_type) {
             TodoList todoList = todoListRepository.findById(id)
                     .orElseThrow(() -> new IllegalStateException("No such list id exists"));
             if (todoList.isDeleted()) {
@@ -102,8 +111,9 @@ public class TodoListService {
             }
             todoList.setTodolist_type(todolist_type);
             todoListRepository.save(todoList);
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body("Todolist with id " + todoList.getTodoListId() + " todolist type updated successfully");
+            return ResponseDto.<String>builder()
+                    .message("TodoListType updated successfully")
+                    .response("Todolist with id " + todoList.getTodoListId() + " todolist type updated successfully")
+                    .build();
         }
 }

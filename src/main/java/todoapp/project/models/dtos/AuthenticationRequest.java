@@ -1,4 +1,4 @@
-package todoapp.project.security;
+package todoapp.project.models.dtos;
 
 import lombok.Data;
 

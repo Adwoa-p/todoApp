@@ -1,4 +1,4 @@
-package todoapp.project.security;
+package todoapp.project.controllers;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

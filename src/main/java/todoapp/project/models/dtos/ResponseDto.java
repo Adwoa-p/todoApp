@@ -1,4 +1,11 @@
 package todoapp.project.models.dtos;
 
-public class ResponseDto <T> {
+import lombok.Builder;
+import lombok.Data;
+
+@Builder
+@Data
+public class ResponseDto<T> {
+    private String message;
+    private T response;
 }
